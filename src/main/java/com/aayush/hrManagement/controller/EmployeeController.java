@@ -26,27 +26,41 @@ public class EmployeeController {
 	private EmployeeService employeeServ;
 
 	@GetMapping("/showAll")
-	public List<Employee> findAllEmployee() {
-		return employeeServ.getAllEmployee();
+	public ResponseEntity<?> findAllEmployee() {
+		List<Employee> employeeList = employeeServ.getAllEmployee();
+		if (employeeList.isEmpty()) {
+			return new ResponseEntity<String>("No employee found", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<Employee>>(employeeList, HttpStatus.OK);
 	}
 
 	@GetMapping("/show/{searchId}")
-	public ResponseEntity<Employee> findEmployeeById(@PathVariable long searchId) {
+	public ResponseEntity<?> findEmployeeById(@PathVariable long searchId) {
 		Optional<Employee> collect = employeeServ.getEmployeeById(searchId);
 		if (collect.isPresent()) {
 			return new ResponseEntity<Employee>(collect.get(), HttpStatus.FOUND);
 		}
-		return new ResponseEntity<Employee>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<String>("No Employee with employeeId: " + searchId, HttpStatus.NOT_FOUND);
 	}
 
 	@PostMapping("/add")
-	public Employee addEmployee(@RequestBody Employee employee) {
-		return employeeServ.saveEmployee(employee);
+	public ResponseEntity<?> addEmployee(@RequestBody Employee employee) {
+		try {
+			Employee savedEmp = employeeServ.saveEmployee(employee);
+			return new ResponseEntity<Employee>(savedEmp, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@PostMapping("/bulkAdd")
-	public List<Employee> addBulkEmployee(@RequestBody List<Employee> employee) {
-		return employeeServ.saveAllEmployee(employee);
+	public ResponseEntity<?> addBulkEmployee(@RequestBody List<Employee> employee) {
+		try {
+			List<Employee> savedEmployeeList = employeeServ.saveAllEmployee(employee);
+			return new ResponseEntity<List<Employee>>(savedEmployeeList, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@PutMapping("/update/{updateId}")
@@ -63,5 +77,4 @@ public class EmployeeController {
 		employeeServ.deleteEmployeeById(searchId);
 	}
 
-	
 }

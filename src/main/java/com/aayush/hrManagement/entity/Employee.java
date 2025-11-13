@@ -3,7 +3,6 @@ package com.aayush.hrManagement.entity;
 import java.time.LocalDate;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Id;
 import lombok.*; 
 
 @Data
@@ -29,4 +28,7 @@ public class Employee {
 	private String jobTitle;
 	private double salary;
 	private String employmentStatus;
+	
+	@Embedded
+    private LeaveQuota leaveQuota = new LeaveQuota();
 }

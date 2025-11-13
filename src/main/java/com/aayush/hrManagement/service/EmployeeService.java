@@ -8,12 +8,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aayush.hrManagement.entity.Employee;
+import com.aayush.hrManagement.repository.AttendanceRepository;
 import com.aayush.hrManagement.repository.EmployeeRepository;
+import com.aayush.hrManagement.repository.LeaveRepository;
+
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EmployeeService {
 	@Autowired
 	private EmployeeRepository employeeRepo;
+	
+	@Autowired
+	private LeaveRepository leaveRepo;
+	
+	@Autowired
+	private AttendanceRepository attendanceRepo;
 
 	public List<Employee> getAllEmployee() {
 		return employeeRepo.findAll();
@@ -21,6 +31,10 @@ public class EmployeeService {
 
 	public Optional<Employee> getEmployeeById(long searchId) {
 		return employeeRepo.findById(searchId);
+	}
+	
+	public Employee getEmployeeByIdNew(long searchId) {
+		return employeeRepo.findById(searchId).get();
 	}
   
 	public Employee saveEmployee(Employee employee) {
@@ -81,9 +95,13 @@ public class EmployeeService {
 		}
 		return null;
 	}
-
-	public void deleteEmployeeById(long searchId) {
+	
+	@Transactional
+	public boolean deleteEmployeeById(long searchId) {
 		employeeRepo.deleteById(searchId);
+		attendanceRepo.deleteByEmployeeId(searchId);
+		leaveRepo.deleteByEmployeeId(searchId);
+		return true;
 	}
 
 }

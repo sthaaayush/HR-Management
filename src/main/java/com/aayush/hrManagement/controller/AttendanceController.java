@@ -24,8 +24,12 @@ public class AttendanceController {
 	private EmployeeService employeeServ;
 
 	@GetMapping("/showAll")
-	public List<Attendance> showAll() {
-		return attendanceServ.getAllEntry();
+	public ResponseEntity<?> showAll() {
+		List<Attendance> attendanceList = attendanceServ.getAllEntry();
+		if (attendanceList.isEmpty()) {
+			return new ResponseEntity<String>("No employee found", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<Attendance>>(attendanceList, HttpStatus.OK);
 	}
 
 	@GetMapping("/checkIn/{empId}")
@@ -35,21 +39,25 @@ public class AttendanceController {
 			String empName = employeeServ.getEmployeeById(empId).get().getFirstName();
 			return new ResponseEntity<String>("Welcome " + empName, HttpStatus.OK);
 		}
-		return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<String>("User With employeeId: " + empId + " does'n exist", HttpStatus.NOT_FOUND);
 	}
 
 	@GetMapping("/checkOut/{empId}")
-	public ResponseEntity<Attendance> getAttendanceByEmp(@PathVariable long empId) {
+	public ResponseEntity<?> getAttendanceByEmp(@PathVariable long empId) {
 		Attendance records = attendanceServ.saveCheckOutEntry(empId);
 		if (records != null)
-			return new ResponseEntity<>(records, HttpStatus.OK);
-		return new ResponseEntity<Attendance>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Attendance>(records, HttpStatus.OK);
+		return new ResponseEntity<String>("Employee " + empId + " is not registered", HttpStatus.NOT_FOUND);
 	}
-	
+
 	@GetMapping("/endShift")
-	public ResponseEntity<List<Attendance>> endShift(){
-		List<Attendance> collect = attendanceServ.endWorkingShiftCall();
-		return new ResponseEntity<>(collect, HttpStatus.OK);
+	public ResponseEntity<?> endShift() {
+		try {
+			List<Attendance> collect = attendanceServ.endWorkingShiftCall();
+			return new ResponseEntity<List<Attendance>>(collect, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 }

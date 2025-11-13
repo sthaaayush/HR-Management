@@ -1,6 +1,8 @@
 package com.aayush.hrManagement.entity;
 
 import java.time.LocalDate;
+import java.time.Period;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "leave_records")
-public class Leave {
+public class Leave{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,14 +31,14 @@ public class Leave {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 150)
     private String reason;
 
     private LocalDate appliedDate;
     private LocalDate decisionDate;
+    
+    private long leaveDays;
 
-    @Embedded
-    private LeaveQuota leaveQuota = new LeaveQuota();
 
     public enum LeaveType {
         SICK, CASUAL, UNPAID, ANNUAL
@@ -45,14 +47,8 @@ public class Leave {
     public enum Status {
         PENDING, APPROVED, REJECTED
     }
-}
-
-@Embeddable
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-class LeaveQuota {
-    private long sickLeaveQuota = 18;
-    private long casualLeaveQuota = 16;
-    private long annualLeaveQuota = 10;
+    
+    public int calcualteLeaveDays(LocalDate startDate, LocalDate endDate) {
+    	return Period.between(startDate, endDate).getDays() + 1;
+    }
 }
