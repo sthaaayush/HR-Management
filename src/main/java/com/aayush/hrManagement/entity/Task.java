@@ -28,7 +28,7 @@ public class Task {
 	private String assignedToIds;
 	
 	@Column(nullable = false)
-	private String assignedBy;
+	private Long assignedBy;
 	
 	private LocalDate startDate;
 	private LocalDate endDate;
