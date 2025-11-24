@@ -78,13 +78,13 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
-		<!--  Added for migration to IntelliJ because of WAR packaging	-->
-		<dependency>
-			<groupId>jakarta.servlet</groupId>
-			<artifactId>jakarta.servlet-api</artifactId>
-			<version>6.0.0</version>
-			<scope>provided</scope>
-		</dependency>
+<!--		&lt;!&ndash;  Added for migration to IntelliJ because of WAR packaging	&ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>jakarta.servlet</groupId>-->
+<!--			<artifactId>jakarta.servlet-api</artifactId>-->
+<!--			<version>6.0.0</version>-->
+<!--			<scope>provided</scope>-->
+<!--		</dependency>-->
 
 
 	</dependencies>
