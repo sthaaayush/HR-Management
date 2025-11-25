@@ -13,26 +13,25 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-//    private final CustomUserDetailsService userDetailsService;
-//
-//    public SecurityConfig(CustomUserDetailsService userDetailsService) {
-//        this.userDetailsService = userDetailsService;
-//    }
-
-	
-//    @Bean
-//    public AuthenticationManager authManager(AuthenticationConfiguration config) throws Exception {
-//        return config.getAuthenticationManager();
-//    }
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
+            	//User	
                 .requestMatchers("/user/**").hasRole("ADMIN")
+                //Employees
                 .requestMatchers(HttpMethod.GET, "/employees/**").hasAnyRole("MANAGER", "HR", "ADMIN")
                 .requestMatchers("/employees/**").hasAnyRole("HR", "ADMIN")
+                //Attendance
+                .requestMatchers("/entry/checkIn/**","/entry/checkOut/**").hasAnyRole("HR", "ADMIN", "EMPLOYEE","MANAGER")
+                .requestMatchers("/entry/showAll").hasAnyRole("HR", "ADMIN", "MANAGER")
+                .requestMatchers("/entry/**").hasAnyRole("HR", "ADMIN")
+                //Leave
+                .requestMatchers("/leave/apply/**").hasAnyRole("HR", "ADMIN", "EMPLOYEE","MANAGER")
+                .requestMatchers("/leave/records/**").hasAnyRole("HR", "ADMIN", "MANAGER")
+                .requestMatchers("/leave/**").hasAnyRole("HR", "ADMIN")
+                
                 .requestMatchers("/healthCheck/**").permitAll()
                 .anyRequest().authenticated()
             )

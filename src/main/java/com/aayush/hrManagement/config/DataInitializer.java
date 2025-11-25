@@ -16,7 +16,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String adminEmail = "admin@hr.com";
+        String adminEmail = "admin@example.com";
         if (userService.getByUserEmail(adminEmail).isEmpty()) {
             User admin = User.builder()
                     .userEmail(adminEmail)
@@ -27,6 +27,8 @@ public class DataInitializer implements CommandLineRunner {
 
             userService.addUser(admin);
             System.out.println("Created default admin user: " + adminEmail + " / admin123");
+        }else {
+        	System.out.println(adminEmail + " already exist in database");
         }
     }
 }

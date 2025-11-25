@@ -18,10 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmployeeService {
 	@Autowired
 	private EmployeeRepository employeeRepo;
-	
+
 	@Autowired
 	private LeaveRepository leaveRepo;
-	
+
 	@Autowired
 	private AttendanceRepository attendanceRepo;
 
@@ -32,22 +32,18 @@ public class EmployeeService {
 	public Optional<Employee> getEmployeeById(long searchId) {
 		return employeeRepo.findById(searchId);
 	}
-	
+
 	public Employee getEmployeeByIdNew(long searchId) {
 		return employeeRepo.findById(searchId).get();
 	}
-  
+
 	public Employee saveEmployee(Employee employee) {
 		if (employee.getDateOfJoining() == null) {
 			employee.setDateOfJoining(LocalDate.now());
 		}
 
-		if (employee.getEmploymentStatus() == null) {
-			employee.setEmploymentStatus("ACTIVE");
-		}
-		
-		employee.setEmploymentStatus(employee.getEmploymentStatus().toUpperCase());
-		
+		employee.setEmploymentStatus(true);
+
 		return employeeRepo.save(employee);
 	}
 
@@ -57,10 +53,8 @@ public class EmployeeService {
 				emp.setDateOfJoining(LocalDate.now());
 			}
 
-			if (emp.getEmploymentStatus() == null && !emp.getEmploymentStatus().isBlank()) {
-				emp.setEmploymentStatus("ACTIVE");
-			}
-			emp.setEmploymentStatus(emp.getEmploymentStatus().toUpperCase());
+			emp.setEmploymentStatus(true);
+			;
 		}
 		return employeeRepo.saveAll(employee);
 	}
@@ -89,13 +83,12 @@ public class EmployeeService {
 				}
 				collect.setSalary(employee.getSalary());
 			}
-			if (employee.getEmploymentStatus() != null && !employee.getEmploymentStatus().isBlank())
-				collect.setEmploymentStatus(employee.getEmploymentStatus());
+			collect.setEmploymentStatus(employee.isEmploymentStatus());
 			return employeeRepo.save(collect);
 		}
 		return null;
 	}
-	
+
 	@Transactional
 	public boolean deleteEmployeeById(long searchId) {
 		employeeRepo.deleteById(searchId);

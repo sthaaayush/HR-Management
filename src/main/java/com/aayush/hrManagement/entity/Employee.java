@@ -27,7 +27,8 @@ public class Employee {
 	private String department;
 	private String jobTitle;
 	private double salary;
-	private String employmentStatus;
+	
+	private boolean employmentStatus;
 	
 	@Embedded
     private LeaveQuota leaveQuota = new LeaveQuota();
