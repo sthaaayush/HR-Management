@@ -28,12 +28,12 @@ public class LeaveService {
 		Optional<Employee> empIn = employeeService.getEmployeeById(leave.getEmployeeId());
 		long empId = leave.getEmployeeId();
 		Leave collect = leaveRepo.findByEmployeeId(empId).orElse(null);
-		if(collect != null) {
-			if(!leave.getStartDate().isAfter(collect.getEndDate())) {
+		if (collect != null) {
+			if (!leave.getStartDate().isAfter(collect.getEndDate())) {
 				return null;
 			}
 		}
-		
+
 		if (empIn.isPresent()) {
 			Employee employee = empIn.get();
 			leave.setAppliedDate(LocalDate.now());
@@ -48,23 +48,16 @@ public class LeaveService {
 			long casualLeaveRemaining = employee.getLeaveQuota().getCasualLeaveQuota();
 			long annualLeaveRemaining = employee.getLeaveQuota().getAnnualLeaveQuota();
 
-			if (leave.getLeaveType().equals(Leave.LeaveType.SICK) && leave.getLeaveDays() <= sickLeaveRemaining) {
-				employee.getLeaveQuota().setSickLeaveQuota(sickLeaveRemaining - leave.getLeaveDays());
+			if (leave.getLeaveType().equals(Leave.LeaveType.SICK) && leave.getLeaveDays() > sickLeaveRemaining) {
+				return null;
 			} else if (leave.getLeaveType().equals(Leave.LeaveType.CASUAL)
-					&& leave.getLeaveDays() <= casualLeaveRemaining) {
-				employee.getLeaveQuota().setCasualLeaveQuota(casualLeaveRemaining - leave.getLeaveDays());
+					&& leave.getLeaveDays() > casualLeaveRemaining) {
+				return null;
 			} else if (leave.getLeaveType().equals(Leave.LeaveType.ANNUAL)
-					&& leave.getLeaveDays() <= annualLeaveRemaining) {
-				employee.getLeaveQuota().setAnnualLeaveQuota(annualLeaveRemaining - leave.getLeaveDays());
-			} else {
+					&& leave.getLeaveDays() > annualLeaveRemaining) {
 				return null;
 			}
-			Employee updateLeaveQuota = employeeService.saveEmployee(employee);
-			if (updateLeaveQuota != null) {
-				return leaveRepo.save(leave);
-			} else {
-				return null;
-			}
+			return leaveRepo.save(leave);
 		} else {
 			return null;
 		}
@@ -72,9 +65,38 @@ public class LeaveService {
 
 	public Leave updateDecisionById(long id, Leave leave) {
 		Leave collect = leaveRepo.findById(id).get();
-		collect.setStatus(leave.getStatus());
-		collect.setDecisionDate(LocalDate.now());
-		return leaveRepo.save(collect);
+		if (collect.getStatus() == Leave.Status.PENDING) {
+			collect.setStatus(leave.getStatus());
+			collect.setDecisionDate(LocalDate.now());
+			if (leave.getStatus() == Leave.Status.APPROVED) {
+				Employee employee = employeeService.getEmployeeByIdNew(collect.getEmployeeId());
+
+				long sickLeaveRemaining = employee.getLeaveQuota().getSickLeaveQuota();
+				long casualLeaveRemaining = employee.getLeaveQuota().getCasualLeaveQuota();
+				long annualLeaveRemaining = employee.getLeaveQuota().getAnnualLeaveQuota();
+
+				if (collect.getLeaveType().equals(Leave.LeaveType.SICK)
+						&& collect.getLeaveDays() <= sickLeaveRemaining) {
+					employee.getLeaveQuota().setSickLeaveQuota(sickLeaveRemaining - collect.getLeaveDays());
+				} else if (collect.getLeaveType().equals(Leave.LeaveType.CASUAL)
+						&& collect.getLeaveDays() <= casualLeaveRemaining) {
+					employee.getLeaveQuota().setCasualLeaveQuota(casualLeaveRemaining - collect.getLeaveDays());
+				} else if (collect.getLeaveType().equals(Leave.LeaveType.ANNUAL)
+						&& collect.getLeaveDays() <= annualLeaveRemaining) {
+					employee.getLeaveQuota().setAnnualLeaveQuota(annualLeaveRemaining - collect.getLeaveDays());
+				} else {
+					return null;
+				}
+				Employee updateLeaveQuota = employeeService.saveEmployee(employee);
+				if (updateLeaveQuota != null) {
+					return leaveRepo.save(collect);
+				} else {
+					return null;
+				}
+			}
+			return leaveRepo.save(collect);
+		}
+		return null;
 	}
 
 }

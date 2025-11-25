@@ -39,7 +39,7 @@ public class LeaveController {
     public ResponseEntity<?> updateLeave(@PathVariable long id, @RequestBody Leave leave) {
         Leave updatedLeave = leaveService.updateDecisionById(id, leave);
         if (updatedLeave == null) {
-            return new ResponseEntity<>("Leave record not found for ID: " + id, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Leave record update fail for ID: " + id, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(updatedLeave, HttpStatus.OK);
     }
