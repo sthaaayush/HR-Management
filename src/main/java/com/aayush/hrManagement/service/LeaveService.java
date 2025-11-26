@@ -69,7 +69,7 @@ public class LeaveService {
 			collect.setStatus(leave.getStatus());
 			collect.setDecisionDate(LocalDate.now());
 			if (leave.getStatus() == Leave.Status.APPROVED) {
-				Employee employee = employeeService.getEmployeeByIdNew(collect.getEmployeeId());
+				Employee employee = employeeService.getEmployeeById(collect.getEmployeeId()).get();
 
 				long sickLeaveRemaining = employee.getLeaveQuota().getSickLeaveQuota();
 				long casualLeaveRemaining = employee.getLeaveQuota().getCasualLeaveQuota();
