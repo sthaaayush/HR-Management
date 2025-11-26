@@ -24,8 +24,9 @@ public class AttendanceService {
 		return attendanceRepo.findAll();
 	}
 
-	public Attendance saveCheckInEntry(long empId) {
-		if (employeeServ.getEmployeeById(empId).isPresent()) {
+	public Attendance saveCheckInEntry(String email) {
+		if (employeeServ.getEmployeeByEmail(email).isPresent()) {
+			long empId = employeeServ.getEmployeeByEmail(email).get().getEmployeeId();
 			Attendance attendance = new Attendance();
 			LocalTime currentTime = LocalTime.now();
 
@@ -43,18 +44,21 @@ public class AttendanceService {
 		return null;
 	}
 
-	public Attendance saveCheckOutEntry(long empId) {
-		Optional<Attendance> collect = attendanceRepo.findByEmployeeIdAndDate(empId, LocalDate.now());
-		LocalTime currentTime = LocalTime.now();
-		if (collect.isPresent() && collect.get().getCheckOutTime() == null) {
-			int workingHours = currentTime.getHour() - collect.get().getCheckInTime().getHour();
-			collect.get().setCheckOutTime(currentTime);
-			if (workingHours >= 5) {
-				collect.get().setStatus(Attendance.Status.HALF_DAY);
-			} else {
-				collect.get().setStatus(Attendance.Status.ABSENT);
+	public Attendance saveCheckOutEntry(String email) {
+		if (employeeServ.getEmployeeByEmail(email).isPresent()) {
+			long empId = employeeServ.getEmployeeByEmail(email).get().getEmployeeId();
+			Optional<Attendance> collect = attendanceRepo.findByEmployeeIdAndDate(empId, LocalDate.now());
+			LocalTime currentTime = LocalTime.now();
+			if (collect.isPresent() && collect.get().getCheckOutTime() == null) {
+				int workingHours = currentTime.getHour() - collect.get().getCheckInTime().getHour();
+				collect.get().setCheckOutTime(currentTime);
+				if (workingHours >= 5) {
+					collect.get().setStatus(Attendance.Status.HALF_DAY);
+				} else {
+					collect.get().setStatus(Attendance.Status.ABSENT);
+				}
+				return attendanceRepo.save(collect.get());
 			}
-			return attendanceRepo.save(collect.get());
 		}
 		return null;
 	}

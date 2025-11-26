@@ -32,7 +32,7 @@ public class Attendance {
 	@Enumerated(EnumType.STRING)
 	@Column(length = 20)
 	private Status status;
-	 
+	  
 	public enum Status{
 		PRESENT, ABSENT, HALF_DAY, LATE
 	}

@@ -27,7 +27,7 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeService employeeServ;
 
-	@GetMapping("/showAll")
+	@GetMapping("/showAll") 
 	public ResponseEntity<?> findAllEmployee() {
 		List<Employee> employeeList = employeeServ.getAllEmployee();
 		if (employeeList.isEmpty()) {
