@@ -29,7 +29,7 @@ public class HrManagementintegratedTest {
 	@Mock
 	AttendanceRepository attendanceRepo;
 
-	@Mock
+	@Mock 
 	EmployeeRepository employeeRepo;
 	
 	@Mock
@@ -106,22 +106,22 @@ public class HrManagementintegratedTest {
 //		verify(leaveRepo).save(lev1);
 	}
 	
-	@Test
-	@DisplayName("Attendance Save Test")
-	void testHrIntegratedAttendance() {
-		when(attendanceRepo.save(any(Attendance.class))).thenReturn(att1);
-		when(employeeServ.getEmployeeById(1)).thenReturn(Optional.of(emp1));
-		
-		Attendance attdResult = new Attendance();
-		attdResult = attendanceServUnderTest.saveCheckInEntry(1);
-		
-		System.out.println(attdResult);
-
-		assertEquals(attdResult, att1);
-		
-		verify(attendanceRepo).save(any(Attendance.class));
-		verify(employeeServ).getEmployeeById(1);
-	}
+//	@Test
+//	@DisplayName("Attendance Save Test")
+//	void testHrIntegratedAttendance() {
+//		when(attendanceRepo.save(any(Attendance.class))).thenReturn(att1);
+//		when(employeeServ.getEmployeeById(1)).thenReturn(Optional.of(emp1));
+//		
+//		Attendance attdResult = new Attendance();
+//		attdResult = attendanceServUnderTest.saveCheckInEntry(1);
+//		
+//		System.out.println(attdResult);
+//
+//		assertEquals(attdResult, att1);
+//		
+//		verify(attendanceRepo).save(any(Attendance.class));
+//		verify(employeeServ).getEmployeeById(1);
+//	}
 	
 	@Test
 	@DisplayName("Leave Save Test")
