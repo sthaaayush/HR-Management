@@ -21,6 +21,7 @@ public class SecurityConfig {
             	//User	
                 .requestMatchers("/user/**").hasRole("ADMIN")
                 //Employees
+                .requestMatchers("/employees/show/**").hasAnyRole("EMPLOYEE","ADMIN")
                 .requestMatchers(HttpMethod.GET, "/employees/**").hasAnyRole("MANAGER", "HR", "ADMIN")
                 .requestMatchers("/employees/**").hasAnyRole("HR", "ADMIN")
                 //Attendance
@@ -31,6 +32,7 @@ public class SecurityConfig {
                 .requestMatchers("/leave/apply/**").hasAnyRole("HR", "ADMIN", "EMPLOYEE","MANAGER")
                 .requestMatchers("/leave/records/**").hasAnyRole("HR", "ADMIN", "MANAGER")
                 .requestMatchers("/leave/**").hasAnyRole("HR", "ADMIN")
+                //Task
                 
                 .requestMatchers("/healthCheck/**").permitAll()
                 .anyRequest().authenticated()

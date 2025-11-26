@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,10 +39,21 @@ public class EmployeeController {
 	@GetMapping("/show/{searchId}")
 	public ResponseEntity<?> findEmployeeById(@PathVariable long searchId) {
 		Optional<Employee> collect = employeeServ.getEmployeeById(searchId);
-		if (collect.isPresent()) {
+		if (collect.isPresent()) { 
 			return new ResponseEntity<Employee>(collect.get(), HttpStatus.FOUND);
 		}
 		return new ResponseEntity<String>("No Employee with employeeId: " + searchId, HttpStatus.NOT_FOUND);
+	}
+
+	@GetMapping("/show")
+	public ResponseEntity<?> findEmployee() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();
+		Optional<Employee> collect = employeeServ.getEmployeeByEmail(email);
+		if (collect.isPresent()) {
+			return new ResponseEntity<Employee>(collect.get(), HttpStatus.FOUND);
+		}
+		return new ResponseEntity<String>("No Employee with employee email: " + email, HttpStatus.NOT_FOUND);
 	}
 
 	@PostMapping("/add")

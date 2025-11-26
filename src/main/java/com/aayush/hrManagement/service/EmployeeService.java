@@ -22,19 +22,19 @@ public class EmployeeService {
 	@Autowired
 	private LeaveRepository leaveRepo;
 
-	@Autowired
+	@Autowired 
 	private AttendanceRepository attendanceRepo;
 
 	public List<Employee> getAllEmployee() {
-		return employeeRepo.findAll();
+		return employeeRepo.findAll(); 
 	}
 
 	public Optional<Employee> getEmployeeById(long searchId) {
 		return employeeRepo.findById(searchId);
 	}
 
-	public Employee getEmployeeByIdNew(long searchId) {
-		return employeeRepo.findById(searchId).get();
+	public Optional<Employee> getEmployeeByEmail(String email){
+		return employeeRepo.findByEmail(email);
 	}
 
 	public Employee saveEmployee(Employee employee) {
