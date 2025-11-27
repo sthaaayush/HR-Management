@@ -33,6 +33,9 @@ public class SecurityConfig {
                 .requestMatchers("/leave/records/**").hasAnyRole("HR", "ADMIN", "MANAGER")
                 .requestMatchers("/leave/**").hasAnyRole("HR", "ADMIN")
                 //Task
+                .requestMatchers("/task/empViewTask").hasAnyRole("EMPLOYEE","HR", "ADMIN", "MANAGER")
+                .requestMatchers("/task/addTask").hasAnyRole("HR", "ADMIN", "MANAGER")
+                .requestMatchers("/task/**").hasAnyRole("HR", "ADMIN")
                 
                 .requestMatchers("/healthCheck/**").permitAll()
                 .anyRequest().authenticated()
