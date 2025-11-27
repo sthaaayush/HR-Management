@@ -2,7 +2,6 @@ package com.aayush.hrManagement.service;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
@@ -133,7 +132,7 @@ public class HrManagementintegratedTest {
 		Leave levResult = leaveServUnderTest.addLeave(lev1);
 
 		System.out.println(levResult);
-		assertEquals(levResult.getLeaveDays(), lev1.calcualteLeaveDays(lev1.getStartDate(), lev1.getEndDate()));
+		assertEquals(levResult.getLeaveDays(), lev1.calculateLeaveDays(lev1.getStartDate(), lev1.getEndDate()));
 		
 		verify(employeeServ).getEmployeeById(1L);
 		verify(leaveRepo).save(lev1);

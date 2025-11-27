@@ -48,7 +48,8 @@ public class Leave{
         PENDING, APPROVED, REJECTED
     }
     
-    public int calcualteLeaveDays(LocalDate startDate, LocalDate endDate) {
+    public int calculateLeaveDays(LocalDate startDate, LocalDate endDate) {
     	return Period.between(startDate, endDate).getDays() + 1;
     }
+    
 }

@@ -26,23 +26,26 @@ public class LeaveService {
 
 	public Leave addLeave(Leave leave) {
 		Optional<Employee> empIn = employeeService.getEmployeeById(leave.getEmployeeId());
-		long empId = leave.getEmployeeId();
-		Leave collect = leaveRepo.findByEmployeeId(empId).orElse(null);
-		if (collect != null) {
-			if (!leave.getStartDate().isAfter(collect.getEndDate())) {
-				return null;
-			}
-		}
+//		long empId = leave.getEmployeeId();
+		LocalDate currentDate = LocalDate.now();
+//		Leave collect = leaveRepo.findByEmployeeId(empId).orElse(null);
+//		if (collect != null) {
+//			if (!leave.getStartDate().isAfter(collect.getEndDate())) {
+//				return null;
+//			}
+//		}
+		if(currentDate.isAfter(leave.getStartDate()) || leave.getStartDate().isAfter(leave.getEndDate()))
+			throw new RuntimeException("Invalid assigned date!");
 
 		if (empIn.isPresent()) {
 			Employee employee = empIn.get();
-			leave.setAppliedDate(LocalDate.now());
+			leave.setAppliedDate(currentDate);
 
 			if (leave.getStatus() == null) {
 				leave.setStatus(Leave.Status.PENDING);
 			}
 
-			leave.setLeaveDays(leave.calcualteLeaveDays(leave.getStartDate(), leave.getEndDate()));
+			leave.setLeaveDays(leave.calculateLeaveDays(leave.getStartDate(), leave.getEndDate()));
 
 			long sickLeaveRemaining = employee.getLeaveQuota().getSickLeaveQuota();
 			long casualLeaveRemaining = employee.getLeaveQuota().getCasualLeaveQuota();
