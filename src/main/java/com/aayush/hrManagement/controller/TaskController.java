@@ -68,8 +68,8 @@ public class TaskController {
 		Long employeeId = employeeServ.getEmployeeByEmail(email).get().getEmployeeId();
 		task.setAssignedBy(employeeId);
 		try {
-			Task taskDetsils = taskServ.addTask(task);
-			return new ResponseEntity<Task>(taskDetsils, HttpStatus.CREATED);
+			Task taskDetails = taskServ.addTask(task);
+			return new ResponseEntity<Task>(taskDetails, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -95,5 +95,5 @@ public class TaskController {
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 }
