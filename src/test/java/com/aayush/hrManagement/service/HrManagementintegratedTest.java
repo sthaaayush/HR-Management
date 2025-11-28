@@ -65,7 +65,6 @@ public class HrManagementintegratedTest {
 		emp1.setPhoneNumber("9812345678");
 		emp1.setDepartment("Human Resources");
 		emp1.setJobTitle("HR Manager");
-		emp1.setSalary(85000.00);
 		emp1.setAddress("Kathmandu, Nepal");
 
 		att1.setAttendanceId(1);

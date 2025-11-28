@@ -57,7 +57,6 @@ class TaskServiceTest {
 		emp1.setPhoneNumber("9812345678");
 		emp1.setDepartment("Human Resources");
 		emp1.setJobTitle("HR Manager");
-		emp1.setSalary(85000.00);
 		emp1.setAddress("Kathmandu, Nepal");
 		
 		emp2.setEmployeeId(2);
@@ -67,7 +66,6 @@ class TaskServiceTest {
 		emp2.setPhoneNumber("9812345678");
 		emp2.setDepartment("Human Resources");
 		emp2.setJobTitle("HR Intern");
-		emp2.setSalary(15000.00);
 		emp2.setAddress("Pokhara, Nepal");
 		
 		empList.add(emp1);

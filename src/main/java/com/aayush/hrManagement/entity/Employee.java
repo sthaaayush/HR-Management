@@ -26,7 +26,6 @@ public class Employee {
 	private String address;
 	private String department;
 	private String jobTitle;
-	private double salary;
 	
 	private boolean employmentStatus;
 	

@@ -77,12 +77,6 @@ public class EmployeeService {
 				collect.setDepartment(employee.getDepartment());
 			if (employee.getJobTitle() != null)
 				collect.setJobTitle(employee.getJobTitle());
-			if (employee.getSalary() != 0) {
-				if (employee.getSalary() < 0) {
-					throw new IllegalArgumentException("Salary cannot be negative");
-				}
-				collect.setSalary(employee.getSalary());
-			}
 			collect.setEmploymentStatus(employee.isEmploymentStatus());
 			return employeeRepo.save(collect);
 		}
